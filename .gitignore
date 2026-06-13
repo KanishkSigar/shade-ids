@@ -1,0 +1,12 @@
+# Anchored to top-level only (so a src/data/ package is never ignored).
+/data/
+/results/
+.venv/
+__pycache__/
+*.pyc
+*.pt
+*.pkl
+*.joblib
+.ipynb_checkpoints/
+.DS_Store
+*_log.txt

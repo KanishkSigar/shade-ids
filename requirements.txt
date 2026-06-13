@@ -1,0 +1,6 @@
+# Week 1 needs only the data stack; ML/DL/dashboard deps are added in later weeks.
+numpy
+pandas
+scikit-learn
+pyyaml
+matplotlib
