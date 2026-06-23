@@ -23,5 +23,13 @@ models:
     tree_method: hist
     random_state: 42
 
+autoencoder:
+  hidden_dims: [64, 32, 16]
+  epochs: 30
+  batch_size: 256
+  lr: 0.001
+  threshold_k: 3.0
+  device: cpu
+
 output:
   results_dir: results
