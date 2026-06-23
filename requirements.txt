@@ -1,6 +1,7 @@
-# Week 1 needs only the data stack; ML/DL/dashboard deps are added in later weeks.
+# Week 1-2: data stack + supervised models. DL/dashboard deps come in later weeks.
 numpy
 pandas
 scikit-learn
+xgboost
 pyyaml
 matplotlib
