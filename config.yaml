@@ -31,5 +31,8 @@ autoencoder:
   threshold_k: 3.0
   device: cpu
 
+explain:
+  shap_sample: 800   # rows to explain (TreeSHAP is fast but not free)
+
 output:
   results_dir: results
