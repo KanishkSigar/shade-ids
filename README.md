@@ -5,7 +5,8 @@ supervised detectors, and a benign-only anomaly detector, with **SHAP** explanat
 for every alert - wrapped in an interactive dashboard.
 
 > Built as a **6-week internship project**. The repository grows one milestone per
-> week; see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md). **Current: Week 4 - Explainability.**
+> week; see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md). **Current: application complete
+> (dashboard + tests + deployment).**
 
 ## What it will do (by Week 6)
 - Ingest network-flow data and engineer features.
@@ -25,6 +26,10 @@ for every alert - wrapped in an interactive dashboard.
 - **Week 4 - Explainability:** SHAP explanations for every detection, both global
   (what drives detections overall) and per-alert (why *this* flow was flagged) - see
   [`docs/week4_explainability.md`](docs/week4_explainability.md).
+- **Application:** a Streamlit dashboard (`app.py`) that brings the detection
+  results, explanations, and a live signature check together in one interface.
+- **Quality and delivery:** unit tests with GitHub Actions CI, plus a deployment
+  guide in [`DEPLOY.md`](DEPLOY.md).
 
 ## Quickstart
 ```powershell
@@ -36,6 +41,7 @@ python -m src.eda      # Week 1: explore the data
 python -m src.train    # Week 2: train + evaluate supervised detectors
 python -m src.hybrid   # Week 3: signature + autoencoder hybrid engine
 python -m src.explain_run  # Week 4: SHAP global + per-alert explanations
+streamlit run app.py       # launch the dashboard (see DEPLOY.md)
 ```
 
 ## Layout
