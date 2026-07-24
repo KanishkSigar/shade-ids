@@ -5,7 +5,7 @@ supervised detectors, and a benign-only anomaly detector, with **SHAP** explanat
 for every alert - wrapped in an interactive dashboard.
 
 > Built as a **6-week internship project**. The repository grows one milestone per
-> week; see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md). **Current: Week 3 - Hybrid engine.**
+> week; see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md). **Current: Week 4 - Explainability.**
 
 ## What it will do (by Week 6)
 - Ingest network-flow data and engineer features.
@@ -22,6 +22,9 @@ for every alert - wrapped in an interactive dashboard.
 - **Week 3 - Hybrid engine:** a signature-rule layer plus a benign-only autoencoder
   that flags anomalies by reconstruction error (no attack labels needed) - see
   [`docs/week3_hybrid.md`](docs/week3_hybrid.md).
+- **Week 4 - Explainability:** SHAP explanations for every detection, both global
+  (what drives detections overall) and per-alert (why *this* flow was flagged) - see
+  [`docs/week4_explainability.md`](docs/week4_explainability.md).
 
 ## Quickstart
 ```powershell
@@ -32,6 +35,7 @@ pip install -r requirements.txt
 python -m src.eda      # Week 1: explore the data
 python -m src.train    # Week 2: train + evaluate supervised detectors
 python -m src.hybrid   # Week 3: signature + autoencoder hybrid engine
+python -m src.explain_run  # Week 4: SHAP global + per-alert explanations
 ```
 
 ## Layout
@@ -43,9 +47,11 @@ src/
   models/baselines.py  # RandomForest / XGBoost + evaluation
   models/autoencoder.py# benign-only autoencoder (anomaly detection)
   signature/rules.py   # fast known-attack rules
+  explain/shap_explain.py # SHAP global + per-alert explanations
   eda.py               # Week 1: class-balance / feature summary
   train.py             # Week 2: train + evaluate supervised detectors
   hybrid.py            # Week 3: signature + autoencoder hybrid engine
+  explain_run.py       # Week 4: generate SHAP explanations
 docs/WEEK_PLAN.md      # 6-week milestone plan
 data/                  # datasets (gitignored)
 ```
