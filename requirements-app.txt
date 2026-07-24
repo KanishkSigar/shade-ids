@@ -1,0 +1,5 @@
+# Slim dependencies for deploying ONLY the dashboard (app.py).
+# It reads precomputed figures from docs/ and uses the pure-Python signature rules,
+# so it needs neither torch, xgboost, nor shap. Use the full requirements.txt to
+# retrain models or regenerate figures.
+streamlit
