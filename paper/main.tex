@@ -239,6 +239,7 @@ so recall is never bought without an equal FPR.}\label{fig:thresh}\end{figure}
 \label{tab:loo}
 \centering
 \small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrccccc}
 \toprule
 Held-out family & $n$ & RF & XGB & AE & RF & AE \\
@@ -387,7 +388,8 @@ $0.540\!\to\!0.982$, Shellcode $0.377\!\to\!0.983$; Table~\ref{tab:loo}).
 label-free autoencoder.}
 \label{tab:priorwork}
 \centering
-\small
+\setlength{\tabcolsep}{4pt}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{llll}
 \toprule
 Study & Protocol & RF result & AE cmp. \\
@@ -397,7 +399,7 @@ Sarhan et~al.~\cite{sarhan_zeroshot} & zero-shot, per-group & drops on some grou
 Lotfi \& Lotfi~\cite{lotfi_zeroday}  & rare families pooled & $0.913$ AUC          & no \\
 \textbf{SHADE (ours)}                & per-family LOO       & $0.855$--$0.999$ AUC & yes \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \section{Discussion}

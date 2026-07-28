@@ -10,3 +10,13 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 *_log.txt
+
+# LaTeX build artifacts (keep main.tex + main.pdf only)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.synctex.gz
+paper/*.fls
+paper/*.fdb_latexmk
