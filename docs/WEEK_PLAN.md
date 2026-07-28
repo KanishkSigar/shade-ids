@@ -1,17 +1,25 @@
-# SHADE-IDS — 6-Week Build Plan
+# SHADE-IDS - 4-Week Build Plan
 
-The repository grows one milestone per week; each week is tagged (`week-1` … `week-6`)
-as that week's submission. Focus is the **application** (a working, explainable IDS),
-not a research paper.
+The repository grows one milestone per week. Focus is the **application** (a working,
+explainable IDS), delivered alongside a **research paper** (`paper/`).
 
 | Week | Milestone | Key deliverables |
 |---|---|---|
-| **1** | **Foundation** | repo scaffold, 6-week plan, data ingestion (load + clean UNSW-NB15), feature pipeline, quick EDA |
-| **2** | **Supervised detection** | RandomForest / XGBoost training, train/test split, metrics report (precision/recall/F1, ROC-AUC) |
-| **3** | **Hybrid engine** | benign-only autoencoder (anomaly / zero-day) + fast signature rules; combined scoring |
-| **4** | **Explainability** | SHAP global + per-alert attributions wired into detections |
-| **5** | **Application** | Streamlit dashboard: inspect flows, run detection, view SHAP, browse results |
-| **6** | **Ship it** | unit tests + CI, packaging (requirements/Docker), deploy to Streamlit Cloud, final docs + demo |
+| **1** | **Foundation** | repo scaffold, data ingestion (load + clean UNSW-NB15), feature pipeline, quick EDA |
+| **2** | **Supervised detection** | RandomForest / XGBoost, train/test split, metrics report (precision/recall/F1, ROC-AUC) |
+| **3** | **Hybrid engine + explainability** | benign-only autoencoder + signature rules; SHAP global + per-alert explanations |
+| **4** | **Application + delivery + paper** | Streamlit dashboard, unit tests + CI, deployment guide, and the research paper |
+
+## Git tags
+The repo history is tagged as it grew. The tags map onto the four weeks as:
+`week-1` = foundation; `week-2` = supervised; `week-3` + `week-4` = hybrid engine +
+SHAP; `week-5` + `week-6` = application, tests/CI and deployment.
+
+## Research paper
+The IEEE-format paper is in [`paper/`](../paper/) (source `main.tex`, compiled
+`main.pdf`, editable draw.io figures in `paper/fig/`). It studies when supervised NIDS
+generalize to unseen attack families across UNSW-NB15 and CIC-IDS2017, with SHAP and
+feature ablation. Results summary: [`docs/research_results.md`](research_results.md).
 
 ## Dataset
 **UNSW-NB15** (binary `label` + multi-class `attack_cat`). Training/testing CSVs go in
@@ -20,4 +28,4 @@ not a research paper.
 
 ## Conventions
 - Small, frequent commits; one logical change each.
-- Each week ends with a `git tag week-N` snapshot = the submission for that week.
+- Each milestone ends with a `git tag` snapshot.
