@@ -4,9 +4,10 @@ A network intrusion detection **application** that combines a fast signature lay
 supervised detectors, and a benign-only anomaly detector, with **SHAP** explanations
 for every alert - wrapped in an interactive dashboard.
 
-> Built as a **6-week internship project**. The repository grows one milestone per
-> week; see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md). **Current: application complete
-> (dashboard + tests + deployment).**
+> Built as a **4-week internship project** (see [`docs/WEEK_PLAN.md`](docs/WEEK_PLAN.md)):
+> Week 1 foundation, Week 2 supervised detection, Week 3 hybrid engine + SHAP, Week 4
+> application + delivery + research paper. **Status: complete.** This single repo holds
+> both the **application** and the **research paper** ([`paper/`](paper/)).
 
 ## What it will do (by Week 6)
 - Ingest network-flow data and engineer features.
@@ -30,6 +31,13 @@ for every alert - wrapped in an interactive dashboard.
   results, explanations, and a live signature check together in one interface.
 - **Quality and delivery:** unit tests with GitHub Actions CI, plus a deployment
   guide in [`DEPLOY.md`](DEPLOY.md).
+
+## Research paper
+The IEEE-format paper is in [`paper/`](paper/) - source `main.tex`, compiled
+`main.pdf`, and editable draw.io figures in `paper/fig/`. It studies when supervised
+NIDS generalize to unseen attack families across UNSW-NB15 and CIC-IDS2017, using SHAP
+and feature ablation, and compares against prior work. Results summary:
+[`docs/research_results.md`](docs/research_results.md).
 
 ## Quickstart
 ```powershell
