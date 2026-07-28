@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="shade-method" name="LOO Methodology">
+    <mxGraphModel dx="900" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="s1" value="Load standard dataset&#10;(UNSW-NB15 / CIC-IDS2017 flows)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="40" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Clean + feature pipeline&#10;(standardize numeric, one-hot categorical)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="130" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Hold out ONE attack family&#10;(simulated zero-day)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="220" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Train supervised RF / XGBoost on known families&#10;Train autoencoder on benign only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="310" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Score held-out family at matched FPR&#10;(ROC-AUC, recall@1%/5% FPR)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="400" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Explain: SHAP attribution + TTL ablation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="490" width="240" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Aggregate across all families&#10;+ compare with prior work" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="580" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s1" target="s2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m2" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s2" target="s3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s3" target="s4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m4" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s4" target="s5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m5" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s5" target="s6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m6" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;" edge="1" parent="1" source="s6" target="s7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="m7" value="repeat for each family" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="s7" target="s3"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
