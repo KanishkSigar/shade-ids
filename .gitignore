@@ -20,3 +20,6 @@ paper/*.blg
 paper/*.synctex.gz
 paper/*.fls
 paper/*.fdb_latexmk
+patent/*.aux
+patent/*.log
+patent/*.out
