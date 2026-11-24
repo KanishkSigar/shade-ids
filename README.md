@@ -9,11 +9,12 @@ for every alert - wrapped in an interactive dashboard.
 > application + delivery + research paper. **Status: complete.** This single repo holds
 > both the **application** and the **research paper** ([`paper/`](paper/)).
 
-## What it will do (by Week 6)
+## Current capabilities
 - Ingest network-flow data and engineer features.
 - Detect known attacks (signature rules) and learn supervised + anomaly detectors.
 - Explain each alert with SHAP so an analyst can see *why* a flow was flagged.
-- Serve it all through a Streamlit dashboard, tested and deployed.
+- Browse committed evaluation figures and replay a recorded flow CSV in the Streamlit dashboard.
+- Replay columns are `spkts,sbytes,dbytes,rate,service,state`. An optional binary `label` column enables error counts for the signature layer.
 
 ## Progress
 - **Week 1 - Foundation:** project scaffold, data ingestion (load + clean UNSW-NB15),

@@ -1,4 +1,4 @@
-"""SHADE-IDS dashboard (Week 5).
+"""SHADE-IDS dashboard.
 
 The application front end: browse detection results, inspect explanations, and try
 the signature layer live. Reads the committed artifacts in docs/ so it starts fast
@@ -9,6 +9,8 @@ Run:  streamlit run app.py     (opens at http://localhost:8501)
 from __future__ import annotations
 
 import os
+
+import pandas as pd
 
 import streamlit as st
 
@@ -21,8 +23,8 @@ st.title("🛡️ SHADE-IDS")
 st.caption("Explainable hybrid intrusion detection - signature rules, supervised "
            "models, and a benign-only autoencoder, with SHAP explanations.")
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Overview", "Detection results", "Explainability", "Live signature check"]
+tab1, tab2, tab3, tab4, replay = st.tabs(
+    ["Overview", "Detection results", "Explainability", "Live signature check", "CSV replay"]
 )
 
 
@@ -100,3 +102,61 @@ with tab4:
         st.error(f"⚠️ Signature match: **{hit}**")
     else:
         st.success("No signature matched - this flow would be passed to the ML layer.")
+
+with replay:
+    st.header("Replay recorded flows")
+    st.caption(
+        "Upload previously recorded flow summaries. This replay runs the signature layer "
+        "on each row and reports the matching rule. Labels, when present, are used only "
+        "to count false alerts and missed detections."
+    )
+    uploaded = st.file_uploader("Flow CSV (up to 10,000 rows)", type="csv")
+    if uploaded is not None:
+        numeric_fields = ["spkts", "sbytes", "dbytes", "rate"]
+        required_fields = numeric_fields + ["service", "state"]
+        try:
+            rows = pd.read_csv(uploaded, nrows=10_001)
+            missing = [field for field in required_fields if field not in rows]
+            if missing:
+                raise ValueError("Missing columns: " + ", ".join(missing))
+            if rows.empty or len(rows) > 10_000:
+                raise ValueError("Provide between 1 and 10,000 rows.")
+            for field in numeric_fields:
+                rows[field] = pd.to_numeric(rows[field], errors="raise")
+                if rows[field].isna().any() or not rows[field].between(0, 1e15).all():
+                    raise ValueError(f"{field} must contain finite, nonnegative numbers.")
+            if rows[["service", "state"]].isna().any().any():
+                raise ValueError("Every row needs a service and state.")
+        except (ValueError, UnicodeError, pd.errors.ParserError) as exc:
+            st.error(str(exc))
+        else:
+            results = rows[required_fields].copy()
+            results.insert(0, "row", results.index + 1)
+            results["matching_rule"] = [
+                rules.match(flow) or "" for flow in rows[required_fields].to_dict("records")
+            ]
+            alerted = results["matching_rule"].ne("")
+            st.metric("Signature alerts", f"{alerted.sum():,} / {len(results):,}")
+            if "label" in rows:
+                labels = pd.to_numeric(rows["label"], errors="coerce")
+                if labels.isin([0, 1]).all():
+                    results["label"] = labels.astype(int)
+                    col1, col2 = st.columns(2)
+                    col1.metric("False alerts", int((alerted & labels.eq(0)).sum()))
+                    col2.metric("Missed detections", int((~alerted & labels.eq(1)).sum()))
+                else:
+                    st.info("Use 0 (benign) or 1 (attack) in every label row to see error counts.")
+            if st.checkbox("Show matching flows only", value=True):
+                results = results[alerted]
+            st.dataframe(results, hide_index=True)
+            exported = results.copy()
+            for field in ["service", "state"]:
+                exported[field] = exported[field].astype(str).str.replace(
+                    r"^([\s]*[=+@-])", r"'\1", regex=True
+                )
+            st.download_button(
+                "Export displayed rows as CSV",
+                exported.to_csv(index=False),
+                file_name="shade-signature-replay.csv",
+                mime="text/csv",
+            )
