@@ -8,7 +8,11 @@ Run:  streamlit run app.py     (opens at http://localhost:8501)
 """
 from __future__ import annotations
 
+from base64 import b64encode
 import os
+from pathlib import Path
+
+from streamlit.components.v1 import html
 
 import pandas as pd
 
@@ -16,24 +20,41 @@ import streamlit as st
 
 from src.signature import rules
 
-DOCS = "docs"
+ROOT = Path(__file__).resolve().parent
+DOCS = ROOT / "docs"
+SAMPLE = ROOT / "demo" / "sample_flows.csv"
+BROWSER_BASE = os.environ.get("SHADE_BROWSER_BASE")
 
 st.set_page_config(page_title="SHADE-IDS", page_icon="🛡️", layout="wide")
 st.title("🛡️ SHADE-IDS")
 st.caption("Explainable hybrid intrusion detection - signature rules, supervised "
            "models, and a benign-only autoencoder, with SHAP explanations.")
 
-tab1, tab2, tab3, tab4, replay = st.tabs(
-    ["Overview", "Detection results", "Explainability", "Live signature check", "CSV replay"]
+replay, tab1, tab2, tab3, tab4 = st.tabs(
+    ["CSV replay", "Overview", "Detection results", "Explainability", "Live signature check"]
 )
 
 
-def show(path: str, caption: str | None = None):
+def show(path: Path, caption: str | None = None):
     """Display a committed figure if present."""
-    if os.path.exists(path):
-        st.image(path, caption=caption)
+    if BROWSER_BASE:
+        st.image(BROWSER_BASE + "docs/" + path.name, caption=caption)
+    elif path.is_file():
+        st.image(str(path), caption=caption)
     else:
         st.info(f"Figure not generated yet: `{path}`")
+
+
+def download_csv(label: str, data: bytes, filename: str):
+    if BROWSER_BASE:
+        encoded = b64encode(data).decode("ascii")
+        html(
+            f'<a style="font: 600 15px system-ui; color: #26594f" download="{filename}" '
+            f'href="data:text/csv;base64,{encoded}">{label}</a>',
+            height=38,
+        )
+    else:
+        st.download_button(label, data, filename, "text/csv")
 
 
 with tab1:
@@ -49,7 +70,7 @@ with tab1:
     st.markdown(
         "UNSW-NB15: 257,673 network flows, 93,000 benign, across 9 attack families."
     )
-    show(os.path.join(DOCS, "week1_attack_distribution.png"),
+    show(DOCS / "week1_attack_distribution.png",
          "Attack category distribution")
 
 with tab2:
@@ -61,14 +82,14 @@ with tab2:
         "| RandomForest | 0.95 | 0.96 | 0.9925 |\n"
         "| XGBoost | 0.95 | 0.96 | 0.9925 |"
     )
-    show(os.path.join(DOCS, "week2_roc.png"), "ROC comparison")
+    show(DOCS / "week2_roc.png", "ROC comparison")
 
     st.subheader("Anomaly detection (Week 3)")
     st.markdown(
         "The benign-only autoencoder catches **35%** of attacks at just a **0.8%** "
         "false-alarm rate, without ever seeing an attack label."
     )
-    show(os.path.join(DOCS, "week3_recon_error.png"),
+    show(DOCS / "week3_recon_error.png",
          "Reconstruction error: benign vs attack")
 
 with tab3:
@@ -80,9 +101,9 @@ with tab3:
     )
     c1, c2 = st.columns(2)
     with c1:
-        show(os.path.join(DOCS, "week4_shap_global.png"), "Global feature importance")
+        show(DOCS / "week4_shap_global.png", "Global feature importance")
     with c2:
-        show(os.path.join(DOCS, "week4_shap_one_alert.png"), "Why this flow was flagged")
+        show(DOCS / "week4_shap_one_alert.png", "Why this flow was flagged")
 
 with tab4:
     st.header("Live signature check")
@@ -110,12 +131,18 @@ with replay:
         "on each row and reports the matching rule. Labels, when present, are used only "
         "to count false alerts and missed detections."
     )
-    uploaded = st.file_uploader("Flow CSV (up to 10,000 rows)", type="csv")
-    if uploaded is not None:
+    source = st.radio("Flow source", ["Built-in sample", "Upload a CSV"], horizontal=True)
+    if source == "Built-in sample":
+        st.info("Five synthetic benign flow summaries for trying the replay. They are not a detection benchmark.")
+        download_csv("Download sample CSV", SAMPLE.read_bytes(), SAMPLE.name)
+        flow_file = SAMPLE
+    else:
+        flow_file = st.file_uploader("Flow CSV (up to 10,000 rows)", type="csv")
+    if flow_file is not None:
         numeric_fields = ["spkts", "sbytes", "dbytes", "rate"]
         required_fields = numeric_fields + ["service", "state"]
         try:
-            rows = pd.read_csv(uploaded, nrows=10_001)
+            rows = pd.read_csv(flow_file, nrows=10_001)
             missing = [field for field in required_fields if field not in rows]
             if missing:
                 raise ValueError("Missing columns: " + ", ".join(missing))
@@ -146,17 +173,18 @@ with replay:
                     col2.metric("Missed detections", int((~alerted & labels.eq(1)).sum()))
                 else:
                     st.info("Use 0 (benign) or 1 (attack) in every label row to see error counts.")
-            if st.checkbox("Show matching flows only", value=True):
+            if st.checkbox("Show matching flows only", value=False):
                 results = results[alerted]
+            if results.empty:
+                st.info("No rows match the selected filter.")
             st.dataframe(results, hide_index=True)
             exported = results.copy()
             for field in ["service", "state"]:
                 exported[field] = exported[field].astype(str).str.replace(
                     r"^([\s]*[=+@-])", r"'\1", regex=True
                 )
-            st.download_button(
+            download_csv(
                 "Export displayed rows as CSV",
-                exported.to_csv(index=False),
-                file_name="shade-signature-replay.csv",
-                mime="text/csv",
+                exported.to_csv(index=False).encode("utf-8"),
+                "shade-signature-replay.csv",
             )

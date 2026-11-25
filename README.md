@@ -9,6 +9,11 @@ for every alert - wrapped in an interactive dashboard.
 > application + delivery + research paper. **Status: complete.** This single repo holds
 > both the **application** and the **research paper** ([`paper/`](paper/)).
 
+**Try the dashboard:** [SHADE-IDS browser demo](https://kanishksigar.me/shade-ids/).
+CSV Replay opens on five labeled synthetic benign flows. You can download the sample,
+filter the results, or upload a CSV. The replay runs the signature layer. The research
+tabs show committed evaluation and SHAP figures.
+
 ## Current capabilities
 - Ingest network-flow data and engineer features.
 - Detect known attacks (signature rules) and learn supervised + anomaly detectors.

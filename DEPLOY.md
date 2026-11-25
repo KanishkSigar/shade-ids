@@ -11,6 +11,20 @@ streamlit run app.py
 Opens at <http://localhost:8501>. Because it runs in the browser it works the same on
 Windows, macOS and Linux.
 
+## Browser deployment
+
+The [browser demo](https://kanishksigar.me/shade-ids/) runs the same Streamlit
+application with Stlite and Pyodide on the portfolio's GitHub Pages site. CSV uploads
+are processed in the browser. The first visit downloads the runtime and dependencies.
+
+Build the static files from this checkout:
+```sh
+sh browser/build.sh /path/to/portfolio/public/shade-ids
+```
+
+Use `npm run build` from the portfolio repo to preview or publish its Pages bundle.
+Keep the Python app and research figures in this repository as the source of truth.
+
 ## Deploy free on Streamlit Community Cloud
 1. Go to <https://share.streamlit.io> and sign in with GitHub.
 2. **New app** -> repo `KanishkSigar/shade-ids`, branch `main`, main file `app.py`.

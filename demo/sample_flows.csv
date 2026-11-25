@@ -1,0 +1,6 @@
+spkts,sbytes,dbytes,rate,service,state,label
+24,1800,6800,12,http,FIN,0
+8,340,740,4,dns,CON,0
+42,8400,12600,28,ssh,CON,0
+78,32140,8180,32,smtp,FIN,0
+16,1300,3980,10,http,CON,0
